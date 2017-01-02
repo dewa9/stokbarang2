@@ -31,7 +31,7 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2><small>Tambah Data</small></h2>
+                    <h2><small>Edit Data</small></h2>
                     
                     <div class="clearfix"></div>
                   </div>
@@ -77,7 +77,7 @@
                       <div class="ln_solid"></div>
                       <div class="form-group">
                         <div class="col-md-6 col-md-offset-3">
-                          <button id="send" type="submit" class="btn btn-success">Submit</button>
+                          <button id="send" type="submit" class="btn btn-success">Ubah</button>
                         </div>
                       </div>
                     </form>

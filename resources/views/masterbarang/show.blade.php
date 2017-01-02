@@ -84,7 +84,7 @@
                   "bSortable": false,
                   "defaultContent": "" +
                   "<div class='btn-group' role='group'>" +
-                  "  <button class='edit  btn btn-primary btn-xs' rel='tooltip' data-toggle='tooltip' data-placement='top' title='Edit'><i class='fa fa-edit'></i></button>" +
+                  "  <button class='edit  btn btn-primary btn-xs' rel='tooltip' data-toggle='tooltip' data-placement='left' title='Edit'><i class='fa fa-edit'></i></button>" +
                   "  <button class='delete btn btn-danger btn-xs' rel='tooltip' data-toggle='tooltip' data-placement='right' title='Hapus'><i class='fa fa-trash-o'></i></button>" +
                   "<button type=\"button\" class=\"btn btn-success btn-xs detail\" rel='tooltip' data-toggle='tooltip' data-placement='right' title='Detail'><i class='fa fa-list'></i>" +
                   "<span class=\"sr-only\">Action</span></button>" +
@@ -107,6 +107,7 @@
     }).
     on('click','.delete',function(){
       var data = gentable.row($(this).parents('tr')).data();
+	  console.log(data.kode_barang);
       alertify.confirm("Konfirmasi","Anda Yakin Ingin menghapus data?", function (e) {
         if (e) {
           $.post("/master_barang/delete",{'id':data.kode_barang,_token:$('input[name=_token]').val()},function(data,status){

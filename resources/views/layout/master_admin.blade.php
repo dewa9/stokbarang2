@@ -64,8 +64,11 @@
                   <li><a><i class="fa fa-home"></i> Dashboard <span class="fa fa-chevron-down"></span></a>
                     
                   </li>
-                  <li><a href="{{url('/master_barang/add')}}"><i class="fa fa-table"></i> Master Barang <span class="fa fa-chevron-down"></span></a>
-                     
+                  <li><a href="#"><i class="fa fa-table"></i> Master Barang <span class="fa fa-chevron-down"></span></a>
+                     <ul class="nav child_menu">
+                      <li><a href="{{url('/master_barang/add')}}">Add</a></li>
+                      <li><a href="{{url('/master_barang/show')}}">Show</a></li>
+                    </ul>
                   </li>
                   <li><a><i class="fa fa-desktop"></i> Penerimaan Barang <span class="fa fa-chevron-down"></span></a>
                      <ul class="nav child_menu">

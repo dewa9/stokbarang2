@@ -14,6 +14,8 @@
 Route::get('/', function () {
     return view('MasterSiswa.add_siswa');
 });
+//error
+Route::get('/error/','Controller@error');
 
 Route::get('/register','RegisterOnlineController@add');
 Route::post('/pos_tregister','RegisterOnlineController@store');
@@ -24,6 +26,7 @@ Route::post('/siswa/postdatasiswa','MasterSiswaController@store');
 Route::get('/master_barang/add','MasterBarangController@add');
 Route::post('/master_barang/store','MasterBarangController@store');
 Route::get('/master_barang/edit/{id}','MasterBarangController@edit');
+Route::get('/master_barang/edit/','Controller@error');
 Route::post('/master_barang/update/{id}','MasterBarangController@update');
 Route::get('/master_barang/show','MasterBarangController@show');
 Route::get('/master_barang/getData','MasterBarangController@getData');

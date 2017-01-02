@@ -45,23 +45,23 @@ class MasterBarangController extends Controller
 
     public function edit($id)
     {
-
-        $model=MasterBarangModel::where('kode_barang', '=',$id)->first();
-        if(count($model)<=0){
-        	return view('masterbarang.edit',array('model'=>$model));
-        }
+		if($id!=0){
+			$model=MasterBarangModel::where('kode_barang', '=',$id)->firstOrFail();
+			return view('masterbarang.edit',array('model'=>$model));
+			
+		}else
+		{
+			return redirect('/error/');
+		}
     }
-    public function update($id)
+    public function update(Request $request,$id)
     {
-    	$action='';
-    	$model=MasterBarangModel::where('kode_barang', '=',$id)->first();
-        if(count($model)<=0){
-        	$model->nama_barang = $request->input('nama_barang');
-        	$model->jumlah_barang = $request->input('jumlah_barang');
-        	$model->satuan = $request->input('satuan');
-        	$model->keterangan = $request->input('keterangan');
-            $action=$model->save();
-        }
+    	//$action='';
+    	$action=MasterBarangModel::where('kode_barang', '=',$id)->update(['nama_barang'=>$request->input('nama_barang'),'jumlah_barang'=>$request->input('jumlah_barang'),
+		'satuan'=>$request->input('satuan'),'keterangan'=> $request->input('keterangan')]);
+        
+        	
+    
     	if($action){
     		return redirect('/master_barang/show');
     	}
@@ -70,8 +70,9 @@ class MasterBarangController extends Controller
     public function delete(Request $request)
     {
         $stat=0;
-        $term = $request->get('id');
-        if((MasterBarangModel::destroy($term)))
+        $term = $request->input('id');
+		$model=MasterBarangModel::where('kode_barang',$term)->delete();
+        if($model)
         {
             $stat=1;
         }

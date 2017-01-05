@@ -26,7 +26,18 @@ class detail_penerimaanRequest extends FormRequest
         return [
             //
              'kode_barang'=>'required',
-            'jumlah_barang' =>'required'
+             'kode-barang2'=>'required',
+            'jumlah_barang' =>'required',
+            'rowIdx' => 'required'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'kode_barang.required' => 'silahkan isi',
+            'kode-barang2.required' => 'silahkan isi',
+            'jumlah_barang.required' => 'silahkan isi'
         ];
     }
 }

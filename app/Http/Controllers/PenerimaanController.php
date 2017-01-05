@@ -29,4 +29,10 @@ class PenerimaanController extends Controller
     {
     	
     }
+
+    public function temp_store(detail_penerimaanRequest $request)
+    {
+        return response()->json(['return'=>1,'idx'=>$request->input('rowIdx')]);
+
+    }
 }

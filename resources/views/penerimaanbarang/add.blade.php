@@ -1,8 +1,10 @@
  @extends('layout.master_admin')
  @section('title','Master Barang')
  @section('css')
-  <!-- Datatables -->
  <link href="{{ URL::asset('vendors/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css')}}" rel="stylesheet">
+   <!-- Datatables -->
+ <link href="{{ URL::asset('vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
+ <link href="{{ URL::asset('vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}" rel="stylesheet">
  @endsection
  
  @section('content')
@@ -35,6 +37,7 @@
                       <form action="{{url('/penerimaan_barang/temp_store')}}" method="post" class="form-horizontal form-label-left" 
                       id="form-penerimaan">
                       <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                      <input type="hidden" name="rowIdx" id="rowIdxPenerimaan" value="-1" />
                        <div class="item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Jenis Barang 
                         </label>
@@ -48,7 +51,7 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Kode Barang  
                         </label>
                         <div class="col-md-3 col-sm-3 col-xs-12">
-                          <input class="form-control col-md-7 col-xs-12"  id="kode-brg" type="text" readonly="true">
+                          <input class="form-control col-md-7 col-xs-12" name="kode-barang2"  id="kode-brg" type="text" readonly="true">
                         </div>
                       </div>
 
@@ -83,6 +86,25 @@
                           </div>
 
                     </form>
+
+                     <table id="datatable-penerimaan" class="table table-striped table-bordered dt-responsive nowrap" data-page-length='25'>
+                       <thead>
+                          <tr>
+                            <th>No</th>
+                            <th>Kode</th>
+                            <th>Jenis</th>
+                            <th>Jumlah</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tfoot>
+                          <tr>
+                            <th colspan="4" style="text-align:right">Total:</th>
+                            <th></th>
+                          </tr>
+                        </tfoot>
+                    </table>
+          <!--endtable-->
                   </div>
                   </div>
                   </div>
@@ -96,36 +118,93 @@
 
 @endsection
 @section('scripts')
+<!-- Datatables -->
+    <script src="{{ URL::asset('vendors/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{ URL::asset('vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
+    <script src="{{ URL::asset('vendors/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+    <script src="{{ URL::asset('vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')}}"></script>
+     <script src="{{ URL::asset('vendors/datatables.helper/datatables_helper.js')}}"></script>
 <script src="{{ URL::asset('vendors/js/moment/moment.min.js')}}" type='text/javascript'></script>
 <script src="{{ URL::asset('vendors/js/datepicker/daterangepicker.js')}}" type='text/javascript'></script>
 <script src="{{ URL::asset('vendors/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js')}}" type='text/javascript'></script>
 <script src="{{ URL::asset('vendor/jsvalidation/js/jsvalidation.min.js')}}" type='text/javascript'></script>
-{!! JsValidator::formRequest('App\Http\Requests\MasterBarangRequest', '#form-master') !!}
+{!! JsValidator::formRequest('App\Http\Requests\detail_penerimaanRequest', '#form-penerimaan') !!}
 <script type="text/javascript">
-  var notify=null;
-  $(document).ready(function(){
-      //tooltip
-      $('body').tooltip({
-        selector: '[rel=tooltip]'
-      });
+ var notify=null;
+  var gentable=null;
 
-      $('#kode-barang').change(function(){
-          $('#kode-brg').val($(this).val());
-      });
 
-      $('#datetimepicker1').daterangepicker({
-          singleDatePicker: true,
-          calender_style: "picker_1"
+  var _initTablePenerimaan = function () {
+        var _renderEditColumnPenerimaan = function (data, type, row) {
+            if (type == 'display') {
+                return ("<div class='btn-group' role='group'>" +
+                "<button class='edit btn btn-primary btn-xs' data-toggle='tooltip' rel='tooltip' data-placement='left' title='Edit'><i class='fa fa-edit fa-fw'></i></button>" +
+                "<button class='button-delete btn btn-danger btn-xs' rel='tooltip' data-toggle='tooltip' data-placement='right' title='Hapus'><i class='fa fa-trash-o'></i></button>"+
+                "</div>");
+            }
+            return data;
+        };
+
+  var arrColumnsPenerimaan = [
+            { 'data': 'id', 'sClass': 'text-right' }, //
+            { 'data': 'kode_barang', 'sClass': 'text-right' }, //
+            {'data': 'nama_barang' }, //
+            {'data': 'jumlah_barang', 'sClass': 'text-right' },
+            { 'data': 'kode_barang', 'mRender': _renderEditColumnPenerimaan, 'sClass': 'text-center' }
+        ];
+
+  _GeneralTable(arrColumnsPenerimaan);
+  gentable = $('#datatable-penerimaan').DataTable(datatableDefaultOptions)
+  .on('click', '.button-delete', function (d) {
+            if (confirm('Hapus item ini ?') == false) {
+                return;
+            }
+            var tr = $(this).closest('tr');
+            var row = gentable.row(tr);
+            if (row.data().ID == 0) {
+                row.remove().draw()
+                return;
+            }
+    }).on('click','.edit',function(){
+            var tr = $(this).closest('tr');
+            var row = gentable.row(tr);
+            var data = row.data();
+            $('#kode-barang').val(data.kode_barang);
+            $('#kode-brg').val(data.kode_barang);
+            $('#jumlah-barang').val(data.jumlah_barang);
+            $('#rowIdxPenerimaan').val(row.index());
         });
+  }
 
+var _GeneralTable = function (arrColumns) {
+        var _coldefs = [
+  ];
+        datatableDefaultOptions.searching = false;
+        datatableDefaultOptions.aoColumns = arrColumns;
+        datatableDefaultOptions.columnDefs = _coldefs;
+        datatableDefaultOptions.autoWidth = false;
+        datatableDefaultOptions.ordering = false;
+        datatableDefaultOptions.fnDrawCallback = function (oSettings) {
+            //show row number
+            for (var i = 0, iLen = oSettings.aiDisplay.length; i < iLen; i++) {
+                $('td:eq(0)', oSettings.aoData[oSettings.aiDisplay[i]].nTr).html((i + 1) + '.');
+            }
+        };
+    }
 
-      /*form
-      $('#form-master').submit(function(e){
+ 
+  $(document).ready(function(){
+
+      $('#form-penerimaan').submit(function(e){
           e.preventDefault();
           $('#send').button('loading');
-          var _datasend=$(this).serialize();
-          $('#form-master input').attr("disabled", "disabled");
-          
+          var _datasend=$(this).serializeArray();
+
+          var nama_barang = $('#kode-barang option:selected').text();
+          var kode_brg = $('#kode-barang option:selected').val();
+          var jml_brg = parseInt($('#jumlah-barang').val());
+
+          $('#form-penerimaan input').attr("disabled", "disabled");
           $.ajax({
             type: 'POST',
             url: $(this).attr('action'),
@@ -140,10 +219,45 @@
             success:function(data){
               if(parseInt(data.return)==1)
               {
-                $('#form-master').trigger('reset');
                   setTimeout(function() {
                     notify.update({'type': 'success', 'message': '<strong>Success</strong> saved!', 'progress': 25});
                   }, 2000);
+
+                  var tableItem = {
+                    id:kode_brg,
+                    kode_barang:kode_brg,
+                    nama_barang : nama_barang,
+                    jumlah_barang:jml_brg
+                  };
+                  if(data.idx ==-1){
+                    var data_found = gentable.rows().data();
+
+                    data_found.data().each(function(value,index){
+                      if(value.id == kode_brg)
+                      {
+                        jml_brg = jml_brg+ value.jumlah_barang;
+                        tableItem.jumlah_barang = jml_brg;
+                        var row_index = "";
+                        row_index=data_found.row().index();
+                        data_found.row(row_index).remove().draw();
+                        /*var arrdata_change = gentable.data();
+                        arrdata_change.splice(row_index,1,tableItem);
+                        gentable.clear();
+                        gentable.rows.add(arrdata_change);*/
+                      }
+                    });
+                    gentable.row.add(tableItem);
+
+                  }
+                  else
+                  {
+                    var arrData = gentable.data();
+                    arrData.splice(data.idx,1,tableItem);
+                    gentable.clear();
+                    gentable.rows.add(arrData);
+                  }
+                  gentable.draw();
+                  $('#form-penerimaan').trigger('reset');
               }
             },
             error:function(xhr,status,errormessage)
@@ -154,12 +268,29 @@
             },
             complete:function()
             {
-              $('#form-master input').removeAttr('disabled');
+              $('#form-penerimaan input').removeAttr('disabled');
               $('.form-group').removeClass('has-success');
               $('#send').button('reset');
+              $('#rowIdxPenerimaan').val(-1);
             }
           });
-      });*/
+      });
+
+
+      $('body').tooltip({
+            selector: '[rel=tooltip]'
+          });
+
+          $('#kode-barang').change(function(){
+              $('#kode-brg').val($(this).val());
+          });
+
+          $('#datetimepicker1').daterangepicker({
+              singleDatePicker: true,
+              calender_style: "picker_1"
+        });
+
+      _initTablePenerimaan();
   });
 </script>
 @endsection

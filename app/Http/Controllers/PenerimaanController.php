@@ -35,4 +35,10 @@ class PenerimaanController extends Controller
         return response()->json(['return'=>1,'idx'=>$request->input('rowIdx')]);
 
     }
+
+    public function store(PenerimaanRequest $request)
+    {
+        return response()->json(['return'=>1]);
+
+    }
 }

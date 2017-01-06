@@ -21,10 +21,20 @@ class PenerimaanRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+     public function rules()
     {
         return [
             //
+            'tanggal_penerimaan'=>'required',
+            'allItemPenerimaan'=>'required'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'tanggal_penerimaan.required' => 'silahkan isi tanggal',
+            'allItemPenerimaan.required' => 'silahkan isi'
         ];
     }
 }

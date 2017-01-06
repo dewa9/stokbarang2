@@ -13,7 +13,7 @@ class PenjualanRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,6 +25,16 @@ class PenjualanRequest extends FormRequest
     {
         return [
             //
+            'tanggal_penjualan'=>'required',
+            'allItemPenjualan'=>'required'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'tanggal_penjualan.required' => 'silahkan isi tanggal',
+            'kode-allItemPenjualan.required' => 'silahkan isi'
         ];
     }
 }

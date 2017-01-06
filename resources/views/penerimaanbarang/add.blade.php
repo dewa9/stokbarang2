@@ -72,8 +72,9 @@
                     </form>
                   </div>
                   <div class="col-md-6 col-sm-6 col-xs-6">
-                      <form action="{{url('/penerimaan_barang/temp_store')}}" method="post" class="form-horizontal form-label-left" id="form-penerimaan">
+                      <form action="{{url('/penerimaan_barang/store')}}" method="post" class="form-horizontal form-label-left" id="form-penerimaan-barang">
                       <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                      <input type="hidden" name="allItemPenerimaan" id="all-Item-Penerimaan" value="" />
                        <div class="item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Tanggal
                         </label>
@@ -85,6 +86,11 @@
                             </div>
                           </div>
 
+                           <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                              <button id="send-barang" type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                          </div>
                     </form>
 
                      <table id="datatable-penerimaan" class="table table-striped table-bordered dt-responsive nowrap" data-page-length='25'>
@@ -129,6 +135,8 @@
 <script src="{{ URL::asset('vendors/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js')}}" type='text/javascript'></script>
 <script src="{{ URL::asset('vendor/jsvalidation/js/jsvalidation.min.js')}}" type='text/javascript'></script>
 {!! JsValidator::formRequest('App\Http\Requests\detail_penerimaanRequest', '#form-penerimaan') !!}
+{!! JsValidator::formRequest('App\Http\Requests\PenerimaanRequest', '#form-penerimaan-barang') !!}
+
 <script type="text/javascript">
  var notify=null;
   var gentable=null;
@@ -230,7 +238,7 @@ var _GeneralTable = function (arrColumns) {
                     jumlah_barang:jml_brg
                   };
                   if(data.idx ==-1){
-                    var data_found = gentable.rows().data();
+                    /*var data_found = gentable.rows().data();
 
                     data_found.data().each(function(value,index){
                       if(value.id == kode_brg)
@@ -243,9 +251,9 @@ var _GeneralTable = function (arrColumns) {
                         /*var arrdata_change = gentable.data();
                         arrdata_change.splice(row_index,1,tableItem);
                         gentable.clear();
-                        gentable.rows.add(arrdata_change);*/
+                        gentable.rows.add(arrdata_change);
                       }
-                    });
+                    });*/
                     gentable.row.add(tableItem);
 
                   }
@@ -275,6 +283,59 @@ var _GeneralTable = function (arrColumns) {
             }
           });
       });
+
+
+     $('#form-penerimaan-barang').submit(function(e){
+              e.preventDefault();
+              var _dataItemPenerimaan = gentable.data();
+              var _alldataItemPenerimaanSend = [];
+
+              $(_dataItemPenerimaan).each(function(i,v){
+                  console.log(v+ " "+i);
+                  _alldataItemPenerimaanSend.push(v);
+              });
+
+              $('#all-Item-Penerimaan').val(_alldataItemPenerimaanSend);
+              $('#send-barang').button('loading');
+
+              var alldata_send=$(this).serializeArray();
+              
+              console.log(alldata_send);
+              //$('#form-penerimaan-barang input').attr("disabled", "disabled");
+              $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: alldata_send,
+                dataType: 'json',
+                beforeSend:function(){
+                  notify=$.notify('<strong>Sending</strong> ...', {
+                            allow_dismiss: false,
+                            showProgressbar: true
+                            });
+                },
+                success:function(data){
+                  if(parseInt(data.return)==1)
+                  {
+                      setTimeout(function() {
+                        notify.update({'type': 'success', 'message': '<strong>Success</strong> saved!', 'progress': 25});
+                      }, 2000);
+                      $('#form-penerimaan-barang').trigger('reset');
+                  }
+                },
+                error:function(xhr,status,errormessage)
+                {
+                  setTimeout(function() {
+                        notify.update({'type': 'danger', 'message': '<strong>Failed</strong> ! ', 'progress': 25});
+                      });
+                },
+                complete:function()
+                {
+                 // $('#form-penerimaan-barang input').removeAttr('disabled');
+                  $('.form-group').removeClass('has-success');
+                  $('#send-barang').button('reset');
+                }
+              });
+          });
 
 
       $('body').tooltip({

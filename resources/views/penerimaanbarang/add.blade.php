@@ -291,17 +291,13 @@ var _GeneralTable = function (arrColumns) {
               var _alldataItemPenerimaanSend = [];
 
               $(_dataItemPenerimaan).each(function(i,v){
-                  console.log(v+ " "+i);
                   _alldataItemPenerimaanSend.push(v);
               });
-
-              $('#all-Item-Penerimaan').val(_alldataItemPenerimaanSend);
+              $('#all-Item-Penerimaan').val(JSON.stringify(_alldataItemPenerimaanSend));
               $('#send-barang').button('loading');
 
               var alldata_send=$(this).serializeArray();
-              
-              console.log(alldata_send);
-              //$('#form-penerimaan-barang input').attr("disabled", "disabled");
+              $('#form-penerimaan-barang input').attr("disabled", "disabled");
               $.ajax({
                 type: 'POST',
                 url: $(this).attr('action'),
@@ -320,6 +316,11 @@ var _GeneralTable = function (arrColumns) {
                         notify.update({'type': 'success', 'message': '<strong>Success</strong> saved!', 'progress': 25});
                       }, 2000);
                       $('#form-penerimaan-barang').trigger('reset');
+                  }else
+                  {
+                    setTimeout(function() {
+                        notify.update({'type': 'danger', 'message': '<strong>Failed</strong> tidak ada data yang dikirim!', 'progress': 25});
+                      }, 2000);
                   }
                 },
                 error:function(xhr,status,errormessage)
@@ -330,7 +331,7 @@ var _GeneralTable = function (arrColumns) {
                 },
                 complete:function()
                 {
-                 // $('#form-penerimaan-barang input').removeAttr('disabled');
+                  $('#form-penerimaan-barang input').removeAttr('disabled');
                   $('.form-group').removeClass('has-success');
                   $('#send-barang').button('reset');
                 }
@@ -348,7 +349,8 @@ var _GeneralTable = function (arrColumns) {
 
           $('#datetimepicker1').daterangepicker({
               singleDatePicker: true,
-              calender_style: "picker_1"
+              calender_style: "picker_1",
+              format:'YYYY-MM-DD'
         });
 
       _initTablePenerimaan();

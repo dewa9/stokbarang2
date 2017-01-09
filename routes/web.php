@@ -36,6 +36,7 @@ Route::post('/master_barang/delete','MasterBarangController@delete');
 Route::get('/penerimaan_barang/add','PenerimaanController@add');
 Route::post('/penerimaan_barang/store','PenerimaanController@store');
 Route::get('/penerimaan_barang/show','PenerimaanController@show');
+Route::get('/penerimaan_barang/getData','PenerimaanController@getData');
 Route::post('/penerimaan_barang/temp_store','PenerimaanController@temp_store');
 
 //Penjualan Barang

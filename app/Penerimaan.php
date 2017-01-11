@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PenerimaanModel extends Model
+class Penerimaan extends Model
 {
     //
     public $timestamps = false;
@@ -15,5 +15,4 @@ class PenerimaanModel extends Model
     {
     	return $this->hasMany('App\DetailPenerimaan');
     }
-    
 }

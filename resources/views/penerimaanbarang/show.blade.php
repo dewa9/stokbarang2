@@ -27,7 +27,7 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2><small>Data Barang Masuk</small></h2>
+                    <h2><small>Data Barang Masuk</small></href2>
                     
                     <div class="clearfix"></div>
                   </div>
@@ -40,7 +40,7 @@
              <thead>
                 <tr>
                   <th>Tanggal</th>
-                  <th>Nama Barang</th>
+                  <th>Kode Barang</th>
                   <th>Jumlah</th>
                   <th></th>
                 </tr>
@@ -71,9 +71,9 @@
           processing: true,
           ajax: '{{url("/penerimaan_barang/getData")}}',
           columns:[
-                 { data: 'tanggal_penerimaan',name: 'tanggal_penerimaan','className':'text-right'},
-                { data: 'nama_barang',name: 'nama_barang'},
-                 { data: 'jumlah_barang',name: 'jumlah_barang','className':'text-right'},
+                 { data: 'relasi_penerimaan.tanggal_penerimaan',name: 'relasi_penerimaan.tanggal_penerimaan','className':'text-right'},
+                { data: 'kd_barang',name: 'kd_barang'},
+                 { data: 'jumlah_penerimaan',name: 'jumlah_penerimaan','className':'text-right'},
                 {
                   "className": "action text-center",
                   "data": null,
@@ -90,9 +90,25 @@
           "columnDefs": [ {
                 "searchable": false,
                 "orderable": false,
+                 "visible": false, 
                 "targets": 0
             }],
-        "order": [[ 1, 'asc' ]]
+            "order": [[ 0, 'asc' ]],
+        drawCallback: function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'current'} ).nodes();
+            var last=null;
+            api.column(0, {page:'current'} ).data().each( function ( group, i ) {
+              if ( last !== group ) {
+                $(rows).eq( i ).before(
+                  '<tr class="group"><td colspan="3">'+'Tanggal Penerimaan '+group+'</td></tr>'
+                );
+                last = group;
+              }
+            });
+           
+             
+        },
       });
       
       

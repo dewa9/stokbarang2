@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Requests\PenerimaanRequest;
 use App\Http\Requests\detail_penerimaanRequest;
-use App\MasterBarangModel;
+use App\MasterBarang;
 use App\Penerimaan;
 use App\DetailPenerimaan;
 use Datatables;
@@ -66,16 +66,16 @@ class PenerimaanController extends Controller
     public function getData()
     {
          $getData = DetailPenerimaan::with(['relasi_penerimaan'=>function($query){
-            $query->select();
+            $query->select('id','tanggal_penerimaan');
+         },'relasi_master'=>function($queryget){
+            $queryget->select('id','nama_barang');
          }])->select();
           return Datatables::of($getData)->make(true);
     }
 
     public function testGetData(){
         
-         $getData = DetailPenerimaan::with(['relasi_masterbarang'=>function($query){
-            $query->select();
-         }])->select();
+         $getData = DetailPenerimaan::with(['relasi_penerimaan','relasi_master'])->select();
           return Datatables::of($getData)->make(true);
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Requests\MasterBarangRequest;
-use App\MasterBarangModel;
+use App\MasterBarang;
 use Datatables;
 
 class MasterBarangController extends Controller
@@ -20,8 +20,8 @@ class MasterBarangController extends Controller
     public function store(MasterBarangRequest $request)
     {
     		$stat=0;
-        	$action = MasterBarangModel::create([
-                'kode_barang'=>$request->input('kode_barang'),
+        	$action = MasterBarang::create([
+                'id'=>$request->input('kode_barang'),
                 'nama_barang'=>$request->input('nama_barang'),
                 'jumlah_barang'=>$request->input('jumlah_barang'),
                 'satuan'=>$request->input('satuan'),
@@ -35,7 +35,7 @@ class MasterBarangController extends Controller
 
     public function getData()
     {
-        $getData = MasterBarangModel::select(['kode_barang','nama_barang','jumlah_barang','satuan','keterangan']);
+        $getData = MasterBarang::select(['id','nama_barang','jumlah_barang','satuan','keterangan']);
         return Datatables::of($getData)->make(true);
     }
 
@@ -46,7 +46,7 @@ class MasterBarangController extends Controller
     public function edit($id)
     {
 		if($id!=0){
-			$model=MasterBarangModel::where('kode_barang', '=',$id)->firstOrFail();
+			$model=MasterBarang::where('id', '=',$id)->firstOrFail();
 			return view('masterbarang.edit',array('model'=>$model));
 			
 		}else
@@ -57,7 +57,7 @@ class MasterBarangController extends Controller
     public function update(Request $request,$id)
     {
     	//$action='';
-    	$action=MasterBarangModel::where('kode_barang', '=',$id)->update(['nama_barang'=>$request->input('nama_barang'),'jumlah_barang'=>$request->input('jumlah_barang'),
+    	$action=MasterBarang::where('id', '=',$id)->update(['nama_barang'=>$request->input('nama_barang'),'jumlah_barang'=>$request->input('jumlah_barang'),
 		'satuan'=>$request->input('satuan'),'keterangan'=> $request->input('keterangan')]);
         
         	
@@ -71,7 +71,7 @@ class MasterBarangController extends Controller
     {
         $stat=0;
         $term = $request->input('id');
-		$model=MasterBarangModel::where('kode_barang',$term)->delete();
+		$model=MasterBarang::where('id',$term)->delete();
         if($model)
         {
             $stat=1;

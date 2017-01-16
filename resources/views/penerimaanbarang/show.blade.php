@@ -37,9 +37,17 @@
                       <!--table-->
           <input type="hidden" name="_token" value="{{ csrf_token() }}">
           <table id="datatable-penerimaan" class="table table-striped table-bordered dt-responsive nowrap" data-page-length='25'>
+		  <colgroup>
+				<col></col>
+				<col></col>
+				<col></col>
+				<col></col>
+				<col style="width:10px"></col>
+			</colgroup>
              <thead>
                 <tr>
                   <th>Tanggal</th>
+				  <th>Nama Barang</th>
                   <th>Kode Barang</th>
                   <th>Jumlah</th>
                   <th></th>
@@ -71,8 +79,9 @@
           processing: true,
           ajax: '{{url("/penerimaan_barang/getData")}}',
           columns:[
-                 { data: 'relasi_penerimaan.tanggal_penerimaan',name: 'relasi_penerimaan.tanggal_penerimaan','className':'text-right'},
-                { data: 'kd_barang',name: 'kd_barang'},
+                 { data: 'relasi_penerimaan[0].tanggal_penerimaan',name: 'relasi_penerimaan.tanggal_penerimaan'},
+				 { data: 'relasi_master.nama_barang',name: 'relasi_master.nama_barang'},
+                { data: 'master_barang_id',name: 'master_barang_id'},
                  { data: 'jumlah_penerimaan',name: 'jumlah_penerimaan','className':'text-right'},
                 {
                   "className": "action text-center",
@@ -108,21 +117,21 @@
             });
            
              
-        },
+        }
       });
       
       
-  var sbody = $('#datatable-master tbody');
+  var sbody = $('#datatable-penerimaan');
     sbody.on('click','.edit',function(){
       var data = gentable.row($(this).parents('tr')).data();
       //window.location.href='/master_barang/edit/'+data.kode_barang;
     }).
     on('click','.delete',function(){
       var data = gentable.row($(this).parents('tr')).data();
-	  console.log(data.kode_barang);
+	  
       alertify.confirm("Konfirmasi","Anda Yakin Ingin menghapus data?", function (e) {
         if (e) {
-          $.post("/master_barang/delete",{'id':data.kode_barang,_token:$('input[name=_token]').val()},function(data,status){
+          $.post("/detail_penerimaan/delete",{'id':data.id,_token:$('input[name=_token]').val()},function(data,status){
               if(parseInt(data.return)==1){
                 alertify.success('Data berhasil dihapus');
                 gentable.ajax.reload();

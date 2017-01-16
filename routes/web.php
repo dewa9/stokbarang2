@@ -38,6 +38,8 @@ Route::post('/penerimaan_barang/store','PenerimaanController@store');
 Route::get('/penerimaan_barang/show','PenerimaanController@show');
 Route::get('/penerimaan_barang/getData','PenerimaanController@getData');
 Route::post('/penerimaan_barang/temp_store','PenerimaanController@temp_store');
+//detail penerimaan barang
+Route::post('/detail_penerimaan/delete','DetailPenerimaanController@delete');
 //test
 Route::get('/penerimaan_barang/testing','PenerimaanController@testGetData');
 

@@ -17,13 +17,14 @@ class PenerimaanController extends Controller
 {
     //
     public function add(){
-    	$arrbarang = MasterBarangModel::pluck('nama_barang', 'kode_barang');
+    	$arrbarang = MasterBarang::pluck('nama_barang', 'id');
     	return view('penerimaanbarang.add',['arrbarang'=>$arrbarang]);
     }
 
     public function show()
     {
-    	return view('penerimaanbarang.show');
+		$arrbarang = MasterBarang::pluck('nama_barang', 'id');
+    	return view('penerimaanbarang.show',['arrbarang'=>$arrbarang]);
     }
 
     public function store_detail_penerimaan()

@@ -27,22 +27,57 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2><small>Data Barang Masuk</small></href2>
+                    <h2><small>Data Barang Masuk</small></h2>
                     
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
                     <br />
-                    
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                      <form action="{{url('/penerimaan_barang/temp_store')}}" method="post" class="form-horizontal form-label-left" 
+                      id="form-penerimaan">
+                      <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                      <input type="hidden" name="Id" id="id-detail" />
+                       <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Jenis Barang 
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                              {!! Form::select('kode_barang', $arrbarang, 'Pilih', array('class' => 'form-control','id'=>'kode-barang')) !!}
+                              
+                        </div>
+                      </div>
+
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Kode Barang  
+                        </label>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                          <input class="form-control col-md-7 col-xs-12" name="kode-barang2"  id="kode-brg" type="text" readonly="true">
+                        </div>
+                      </div>
+
+                       <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Jumlah  
+                        </label>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                          <input class="form-control col-md-7 col-xs-12"  id="jumlah-barang" name="jumlah_barang"  required="required" type="number">
+                        </div>
+                      </div>
+                      
+                      <div class="ln_solid"></div>
+                      <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                          <button id="send" type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
                       <!--table-->
-          <input type="hidden" name="_token" value="{{ csrf_token() }}">
           <table id="datatable-penerimaan" class="table table-striped table-bordered dt-responsive nowrap" data-page-length='25'>
 		  <colgroup>
+				<col style="width:200px"></col>
 				<col></col>
 				<col></col>
-				<col></col>
-				<col></col>
-				<col style="width:10px"></col>
+				<col ></col>
 			</colgroup>
              <thead>
                 <tr>
